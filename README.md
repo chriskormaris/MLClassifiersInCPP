@@ -4,7 +4,7 @@ A k-NN classifier for the LingSpam dataset, written in C++.
 The program is tested on a Linux machine.
 
 ### How to compile
-* Run the script "compile.sh".
+Run the script "compile.sh".
 
 ### How to run
 1. First construct the dataset. Run:
