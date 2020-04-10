@@ -8,11 +8,11 @@ Run the script "compile.sh".
 
 ### How to run
 1. First construct the dataset. Run:
-```c++
+```bash
 ./bin/construct_dataset.o
 ```
 
 2. Then, classify the dataset, using a k-NN classifier. Run:
-```c++
+```bash
 ./bin/Main.o
 ```
