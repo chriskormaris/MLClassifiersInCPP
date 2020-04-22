@@ -131,7 +131,7 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
             predicted_labels[i] = sorted_train_labels[0];
         }
 
-        cout << "i: " << i << ", filename: " << testPool[i].getFileName() 
+        cout << "kNN, i: " << i << ", filename: " << testPool[i].getFileName() 
             << ", predicted category: " << predicted_labels[i] << "\n";
 
     }

@@ -8,6 +8,8 @@
 
 #include "classifier.h"
 #include "knnclassifier.h"
+#include "nbclassifier.h"
+#include "baselineclassifier.h"
 #include "instancepool.h"
 
 using namespace std;
@@ -28,7 +30,11 @@ class ClassifierEvaluator {
         ClassifierEvaluator();
 
         ClassifierEvaluator(KNNClassifier kNN, InstancePool trainingPool, InstancePool testPool);
-		
+
+        ClassifierEvaluator(NaiveBayesClassifier nb, InstancePool trainingPool, InstancePool testPool);
+
+        ClassifierEvaluator(BaselineClassifier base, InstancePool trainingPool, InstancePool testPool);
+
         // Copy Constructor
         ClassifierEvaluator(const ClassifierEvaluator& original);
 

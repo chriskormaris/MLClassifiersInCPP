@@ -110,7 +110,6 @@ vector<string> tokenize_document(string sdocument) {
 
 	/*
 	// A 2nd implementation for the tokenization.
-
 	// stringstream class ss
 	stringstream ss(sdocument); 
 	

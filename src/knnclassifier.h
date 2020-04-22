@@ -16,7 +16,7 @@ class KNNClassifier : public Classifier {
     private:
         unsigned k = 1;
         string metric = "euclidean_distances";
-		// string metric = "cosine_similarities";
+        // string metric = "cosine_similarity";
     
     public:
         // Constructor

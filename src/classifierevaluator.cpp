@@ -4,6 +4,8 @@
 #include <stdlib.h>			/* cin, cout */
 
 #include "knnclassifier.h"
+#include "nbclassifier.h"
+#include "baselineclassifier.h"
 #include "instancepool.h"
 #include "classifierevaluator.h"
 
@@ -30,6 +32,37 @@ ClassifierEvaluator::ClassifierEvaluator(KNNClassifier kNN, InstancePool trainin
     }
     calculateMetrics(predicted_labels, test_true_labels);
 }
+
+ClassifierEvaluator::ClassifierEvaluator(NaiveBayesClassifier nb, InstancePool trainingPool, InstancePool testPool) {
+    this->classifier = &nb;
+    // this->trainingPool = trainingPool;
+    // this->testPool = testPool;
+    
+    bool* predicted_labels = nb.classify(trainingPool, testPool);
+
+    unsigned Ntest = testPool.getNumberOfInstances();
+    bool test_true_labels[Ntest];
+    for (int i=0; i<Ntest; i++) {
+        test_true_labels[i] = testPool[i].getCategory();
+    }
+    calculateMetrics(predicted_labels, test_true_labels);
+}
+
+ClassifierEvaluator::ClassifierEvaluator(BaselineClassifier base, InstancePool trainingPool, InstancePool testPool) {
+    this->classifier = &base;
+    // this->trainingPool = trainingPool;
+    // this->testPool = testPool;
+    
+    bool* predicted_labels = base.classify(trainingPool, testPool);
+
+    unsigned Ntest = testPool.getNumberOfInstances();
+    bool test_true_labels[Ntest];
+    for (int i=0; i<Ntest; i++) {
+        test_true_labels[i] = testPool[i].getCategory();
+    }
+    calculateMetrics(predicted_labels, test_true_labels);
+}
+
 
 // Copy Constructor
 ClassifierEvaluator::ClassifierEvaluator(const ClassifierEvaluator& original) {

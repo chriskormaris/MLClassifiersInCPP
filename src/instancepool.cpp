@@ -13,8 +13,11 @@ using namespace std;
 
 // Constructor
 InstancePool::InstancePool() {
-	
-	ifstream keywords_file("keywords-filenames/keywords.txt");
+
+	string linux_or_windows = "linux-cygwin";
+	// string linux_or_windows = "windows";
+
+	ifstream keywords_file(linux_or_windows + "/keywords.txt");
 	string keywords_text((istreambuf_iterator<char>(keywords_file)), istreambuf_iterator<char>());
 
 	unsigned i = 0;
