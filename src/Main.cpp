@@ -24,8 +24,9 @@ int main() {
    
    KNNClassifier kNN;
    kNN.setK(10);  // the k is 1 by default
-   // kNN.setMetric("euclidean");  // the metric is "Euclidean distance" by default
-   kNN.setMetric("cosine");
+   // By default the metric is Euclidean distances.
+   // kNN.setMetric("euclidean_distances");
+   kNN.setMetric("cosine_similarity");
    ClassifierEvaluator kNNEvaluator(kNN, trainingPool, testPool);
    printResults("kNN evaluation:", kNNEvaluator);
 

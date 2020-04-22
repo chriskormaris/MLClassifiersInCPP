@@ -67,13 +67,13 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
             // cout << "j: " << j << "\n";
 
             // find the euclidean distance between the two tfidf vectors
-            if (this->getMetric() == "euclidean") {
+            if (this->getMetric() == "euclidean_distances") {
                 distances[j] = get_euclidean_distance(testPool[i], trainingPool[j], testPool.getFeatures().size());
                 // cout << "distances[" << j << "]: " << distances[j] << "\n";
             }
 
             // find the cosine similarities between the two tfidf vectors
-            if (this->getMetric() == "cosine") {
+            if (this->getMetric() == "cosine_similarity") {
                 distances[j] = get_cosine_similarity(testPool[i], trainingPool[j], testPool.getFeatures().size());
                 // cout << "distances[" << j << "]: " << distances[j] << "\n";
             }
@@ -93,10 +93,10 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
         for (int ii=0; ii<Ntrain; ii++) {
             for (int jj=1; jj<Ntrain-ii; jj++) {
                 bool order;
-                if (this->getMetric() == "euclidean")
+                if (this->getMetric() == "euclidean_distances")
                     // sort in ascending order
                     order = distances[jj-1] > distances[jj];
-                else if (this->getMetric() == "cosine")
+                else if (this->getMetric() == "cosine_similarity")
                     // sort in descending order
                     order = distances[jj-1] < distances[jj];
                 if (order) {
@@ -153,41 +153,41 @@ float KNNClassifier::get_euclidean_distance(Instance inst1, Instance inst2, unsi
     unsigned m = 0;
     unsigned r = 0;
     // cout << "N: " << N << "\n";
-    for (int l=0; l<N; l++) {
-        // cout << "l: " << l << ", m: " << m << ", r: " << r << "\n";
+    for (int i=0; i<N; i++) {
+        // cout << "i: " << i << ", m: " << m << ", r: " << r << "\n";
         unsigned id1 = inst1.getFeatureID(m);
         unsigned id2 = inst2.getFeatureID(r);
         // cout << "id1: " << id1 << ", id2: " << id2 << "\n";
-        if (l == id1 && l == id2) {
+        if (i == id1 && i == id2) {
             sum += pow(inst1.getScore(m) - inst2.getScore(r), 2);
             if (m < inst1.getNumberOfFeatures() - 1)
                 m += 1;
             if (r < inst2.getNumberOfFeatures() - 1)
                 r += 1;
         } else {
-            if (l == id1)
+            if (i == id1)
                 sum += pow(inst1.getScore(m) - 1, 2);
-            else if (l == id2)
+            else if (i == id2)
                 sum += pow(1 - inst2.getScore(r), 2);
-            else if (l != id1 && l != id2)
+            else if (i != id1 && i != id2)
                 sum += 1;
 
-            if (id1 < l && id2 < l) {
+            if (id1 < i && id2 < i) {
                 if (m < inst1.getNumberOfFeatures() - 1)
                     m += 1;
                 if (r < inst2.getNumberOfFeatures() - 1)
                     r += 1;
-            } else if (id1 < l) {
+            } else if (id1 < i) {
                 if (m < inst1.getNumberOfFeatures() - 1)
                     m += 1;
-            } else if (id2 < l) {
+            } else if (id2 < i) {
                 if (r < inst2.getNumberOfFeatures() - 1)
                     r += 1;
             }
 
         }
         
-        // cout << "l: " << l << ", m: " << m << ", r: " << r << "\n";
+        // cout << "i: " << i << ", m: " << m << ", r: " << r << "\n";
     }
     // cout << "sum: " << sum << "\n";
     euclidean_distance = sqrt(sum);
@@ -205,12 +205,12 @@ float KNNClassifier::get_cosine_similarity(Instance inst1, Instance inst2, unsig
     unsigned m = 0;
     unsigned r = 0;
     // cout << "N: " << N << "\n";
-    for (int l=0; l<N; l++) {
-        // cout << "l: " << l << ", m: " << m << ", r: " << r << "\n";
+    for (int i=0; i<N; i++) {
+        // cout << "i: " << i << ", m: " << m << ", r: " << r << "\n";
         unsigned id1 = inst1.getFeatureID(m);
         unsigned id2 = inst2.getFeatureID(r);
         // cout << "id1: " << id1 << ", id2: " << id2 << "\n";
-        if (l == id1 && l == id2) {
+        if (i == id1 && i == id2) {
             sum += inst1.getScore(m) * inst2.getScore(r);
             if (m < inst1.getNumberOfFeatures() - 1)
                 m += 1;
@@ -218,15 +218,15 @@ float KNNClassifier::get_cosine_similarity(Instance inst1, Instance inst2, unsig
                 r += 1;
         } else {
 
-            if (id1 < l && id2 < l) {
+            if (id1 < i && id2 < i) {
                 if (m < inst1.getNumberOfFeatures() - 1)
                     m += 1;
                 if (r < inst2.getNumberOfFeatures() - 1)
                     r += 1;
-            } else if (id1 < l) {
+            } else if (id1 < i) {
                 if (m < inst1.getNumberOfFeatures() - 1)
                     m += 1;
-            } else if (id2 < l) {
+            } else if (id2 < i) {
                 if (r < inst2.getNumberOfFeatures() - 1)
                     r += 1;
             }
@@ -234,12 +234,12 @@ float KNNClassifier::get_cosine_similarity(Instance inst1, Instance inst2, unsig
         }
 
         // Calculate the euclidean norms (norm 2) of each vector.
-        if (l == id1)
+        if (i == id1)
             norm_inst1 += pow(inst1.getScore(m), 2);
-        if (l == id2)
+        if (i == id2)
             norm_inst2 += pow(inst2.getScore(r), 2);
         
-        // cout << "l: " << l << ", m: " << m << ", r: " << r << "\n";
+        // cout << "i: " << i << ", m: " << m << ", r: " << r << "\n";
     }
     // cout << "sum: " << sum << "\n";
     norm_inst1 = sqrt(norm_inst1);
