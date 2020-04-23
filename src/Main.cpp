@@ -19,7 +19,6 @@ int main() {
 
    ifstream trainingFile("training_data.txt");
    ifstream testFile("test_data.txt");
-   // ifstream testFile("test_data_small.txt");
    InstancePool trainingPool, testPool;
    trainingFile >> trainingPool;
    testFile >> testPool;

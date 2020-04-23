@@ -111,14 +111,14 @@ void ClassifierEvaluator::calculateMetrics(bool* predicted_labels, bool* test_tr
     unsigned false_negatives = 0;
 
     for (int i=0; i<Ntest; i++) {
-        if (predicted_labels[i] == test_true_labels[i] && test_true_labels[i]) {
+        if (predicted_labels[i] == test_true_labels[i] && predicted_labels[i]) {
             true_positives++;
-        } else if (predicted_labels[i] != test_true_labels[i] && test_true_labels[i]) {
+        } else if (predicted_labels[i] != test_true_labels[i] && predicted_labels[i]) {
             false_positives++;
             wrong_counter++;
-        } else if (predicted_labels[i] == test_true_labels[i] && !test_true_labels[i]) {
+        } else if (predicted_labels[i] == test_true_labels[i] && !predicted_labels[i]) {
             true_negatives++;
-        } else if (predicted_labels[i] != test_true_labels[i] && !test_true_labels[i]) {
+        } else if (predicted_labels[i] != test_true_labels[i] && !predicted_labels[i]) {
             false_negatives++;
             wrong_counter++;
         }
