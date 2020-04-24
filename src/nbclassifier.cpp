@@ -30,17 +30,16 @@ bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool tes
     unsigned Ntest = testPool.getNumberOfInstances();
 
     unsigned Ntrain = trainingPool.getNumberOfInstances();
+    
+    // sum_of_all_test_vector_scores_in_class:
+    // sum of (tf-idf weights of the test feature vector for all the train documents having these tokens, belonging to that class) 
 
-    // word_count_in_class:
-    // sum of (tf-idf_weights of the word for all the documents belonging to that class) 
-    // Basically replacing the counts with the tf-idf weights of the same word calculated for every document within that class.
+    // sum_of_all_train_scores_in_class: 
+    // sum of (tf-idf weights of all the tokens belonging to that class, for the train documents)
 
-    // total_words_in_class: 
-    // sum of (tf-idf weights of all the words belonging to that class)
-
-    float total_words_in_spam_class = 0;
-    float total_words_in_ham_class = 0;
-
+    float sum_of_all_train_scores_in_spam_class = 0;
+    float sum_of_all_train_scores_in_ham_class = 0;
+    
     for (int i=0; i<Ntrain; i++) {
         Instance inst = trainingPool[i];
         bool label = inst.getCategory();
@@ -48,27 +47,28 @@ bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool tes
             int id = inst.getFeatureID(j);
             float score = inst.getScore(j);
             if (label)
-                total_words_in_spam_class += score;
+                sum_of_all_train_scores_in_spam_class += score;
             else
-                total_words_in_ham_class += score;
+                sum_of_all_train_scores_in_ham_class += score;
         }
     }
 
     bool* predicted_labels = new bool[Ntest];
     for (int i=0; i<Ntest; i++) {
         
-        float jth_word_count_in_spam_class = 0;
-        float jth_word_count_in_ham_class = 0;
+        float sum_of_all_test_vector_scores_in_spam_class = 0;
+        float sum_of_all_test_vector_scores_in_ham_class = 0;
         int j = 0;
         while (j < testPool[i].getNumberOfFeatures()) {
             int id = testPool[i].getFeatureID(j);
+            float score = testPool[i].getScore(j);
             // cout << "j: " << j << ", id: " << id << "\n";
 
             for (int k=0; k<Ntrain; k++) {
                 // cout << "k: " << k << "\n";
                 int l = 0;
                 int id2 = -1;
-                while (l < testPool[k].getNumberOfFeatures() && id2 < id) {
+                while (l < trainingPool[k].getNumberOfFeatures() && id2 < id) {
                     id2 = trainingPool[k].getFeatureID(l);
                     // cout << "l: " << l << ", id2: " << id2 << "\n";
                     l++;
@@ -77,9 +77,9 @@ bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool tes
                     // cout << "id == id2" << "\n";
                     // cout << "l: " << l << "\n";
                     if (trainingPool[k].getCategory()) {
-                        jth_word_count_in_spam_class += trainingPool[k].getScore(l-1);
+                        sum_of_all_test_vector_scores_in_spam_class += score;
                     } else {
-                        jth_word_count_in_ham_class += trainingPool[k].getScore(l-1);
+                        sum_of_all_test_vector_scores_in_ham_class += score;
                     }
                 }
             }
@@ -87,10 +87,10 @@ bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool tes
             j++;
         }
 
-        float p_jth_word_given_spam_class = jth_word_count_in_spam_class / total_words_in_spam_class;
-        float p_jth_word_given_ham_class = jth_word_count_in_ham_class / total_words_in_ham_class;
+        float prob_feature_vector_given_spam_class = sum_of_all_test_vector_scores_in_spam_class / sum_of_all_train_scores_in_spam_class;
+        float prob_feature_vector_given_ham_class = sum_of_all_test_vector_scores_in_ham_class / sum_of_all_train_scores_in_ham_class;
 
-        if (p_jth_word_given_spam_class >= p_jth_word_given_ham_class)
+        if (prob_feature_vector_given_spam_class >= prob_feature_vector_given_ham_class)
             predicted_labels[i] = true;
         else
             predicted_labels[i] = false;
