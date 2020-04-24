@@ -38,13 +38,12 @@ Run the script "compile.sh". Type:
 		<th>Accuracy</th>
 		<th>Precision</th>
 		<th>Recall</th>
-		<th># test files</th>
-		<th># wrong classifications</th>
-		<th># true positives</th>
-		<th># false positives</th>
-		<th># true positives</th>
-		<th># false positives</th>
-		<th># false negatives</th>
+		<th># test</th>
+		<th># wrong</th>
+		<th># TP</th>
+		<th># TN</th>
+		<th># FP</th>
+		<th># FN</th>
 	</tr>
 	<tr>
 		<td>10-NN Classifier using Euclidean distances metric</td>
