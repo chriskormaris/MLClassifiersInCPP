@@ -37,7 +37,7 @@ Run the script "compile.sh". Type:
 		<th>Classifier</th>
 		<th>Accuracy</th>
 		<th>Precision</th>
-		<th>Recall</th>
+		<th> Recall </th>
 		<th># test</th>
 		<th># wrong</th>
 		<th># TP</th>
