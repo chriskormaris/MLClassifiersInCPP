@@ -47,9 +47,9 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>10-NN Classifier using Euclidean distances metric</td>
-		<td>91.3495%</td>
-		<td>65.7534%</td>
-		<td>100%</td>
+		<td>91.35 %</td>
+		<td>65.75 %</td>
+		<td>100 %</td>
 		<td>289</td>
 		<td>25</td>
 		<td>48</td>
@@ -59,9 +59,9 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>1-NN Classifier using Euclidean distances metric</td>
-		<td>88.9273%</td>
-		<td>60%</td>
-		<td>100%</td>
+		<td>88.93 %</td>
+		<td>60 %</td>
+		<td>100 %</td>
 		<td>289</td>
 		<td>32</td>
 		<td>48</td>
@@ -71,9 +71,9 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>10-NN Classifier using Cosine similarity metric</td>
-		<td>93.0796%</td>
-		<td>71.875%</td>
-		<td>95.8333%</td>
+		<td>93.08 %</td>
+		<td>71.88 %</td>
+		<td>95.83 %</td>
 		<td>289</td>
 		<td>20</td>
 		<td>46</td>
@@ -83,9 +83,9 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>1-NN Classifier using Cosine similarity metric</td>
-		<td>78.2007%</td>
-		<td>37.2881%</td>
-		<td>45.8333%</td>
+		<td>78.2 %</td>
+		<td>37.29 %</td>
+		<td>45.83 %</td>
 		<td>289</td>
 		<td>63</td>
 		<td>22</td>
@@ -95,9 +95,9 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>Naive Bayes Classifier</td>
-		<td>95.8477%</td>
-		<td>82.1429%</td>
-		<td>95.8333%</td>
+		<td>95.85 %</td>
+		<td>82.14 %</td>
+		<td>95.83 %</td>
 		<td>289</td>
 		<td>12</td>
 		<td>46</td>
@@ -107,9 +107,9 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>Baseline Classifier (Most Frequent label strategy)</td>
-		<td>83.391%</td>
-		<td>65.7534%</td>
-		<td>0%</td>
+		<td>83.4 %</td>
+		<td>65.75 %</td>
+		<td>0 %</td>
 		<td>289</td>
 		<td>48</td>
 		<td>0</td>
@@ -119,9 +119,9 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>Baseline Classifier (Random labels strategy)</td>
-		<td>46.7128%</td>
-		<td>13.6986%</td>
-		<td>41.6667%</td>
+		<td>46.71 %</td>
+		<td>13.7 %</td>
+		<td>41.67 %</td>
 		<td>289</td>
 		<td>154</td>
 		<td>20</td>
