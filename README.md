@@ -32,14 +32,6 @@ Run the script "compile.sh". Type:
 
 ### Experiment results
 
-<style>
-
-table th:nth-of-type(4) {
-    width: 10%;
-}
-
-</style>
-
 <table>
 	<tr>
 		<th>Classifier</th>
