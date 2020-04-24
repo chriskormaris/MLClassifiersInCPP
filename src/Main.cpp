@@ -24,7 +24,9 @@ int main() {
    testFile >> testPool;
    
    KNNClassifier kNN;
-   kNN.setK(10);  // the k is 1 by default
+   // By default, the number of neighbours, k is 1.
+   // kNN.setK(1);
+   kNN.setK(10);
    // By default, the metric is Euclidean distances.
    // kNN.setMetric("euclidean_distances");
    // kNN.setMetric("cosine_similarity");
