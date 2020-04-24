@@ -25,7 +25,8 @@ NaiveBayesClassifier::~NaiveBayesClassifier() {
 }
 
 
-// See this: https://stackoverflow.com/questions/37405617/how-to-use-tf-idf-with-naive-bayes
+// This is an implementation for the Naive Bayes classifier with tf-idf features,
+// that is not scientifically proven to be correct. It is something that seemed to do the trick.
 bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool testPool) {
     unsigned Ntest = testPool.getNumberOfInstances();
 
