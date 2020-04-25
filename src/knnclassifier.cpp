@@ -53,17 +53,31 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
     bool* predicted_labels = new bool[Ntest];
     
     bool test_true_labels[Ntest];
-    for (int i=0; i<Ntest; i++) {
+    int i = 0;
+    for (i=0; i<Ntest; i++) {
         test_true_labels[i] = testPool[i].getCategory();
     }
 
-    // Perform kNN with Euclidean distances.
-    for (int i=0; i<Ntest; i++) {
+    // By default, perform kNN with Euclidean distances.
+    // Alternatively, use cosine similarity.
+    i = 0;
+    int j = 0;
+    int ii = 0;
+    int jj = 0;
+    float distances[Ntrain];
+    bool* sorted_train_labels = new bool[Ntrain];
+    bool order = false;
+    // cout << "order: " << order << "\n";
+    unsigned spam_votes = 0;
+    unsigned ham_votes = 0;
+    float temp1 = 0.0;
+    float temp2 = 0.0;
+    for (i=0; i<Ntest; i++) {
         // cout << "i: " << i << ", filename: " << testPool[i].getFileName() << "\n";
         
-        float distances[Ntrain];
+        // float distances[Ntrain];
 
-        for (int j=0; j<Ntrain; j++) {
+        for (j=0; j<Ntrain; j++) {
             // cout << "j: " << j << "\n";
 
             // find the euclidean distance between the two tfidf vectors
@@ -79,8 +93,7 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
             }
         }
 
-        bool* sorted_train_labels = new bool[Ntrain];
-        for (int j=0; j<Ntrain; j++) {
+        for (j=0; j<Ntrain; j++) {
             sorted_train_labels[j] = trainingPool[j].getCategory();
         }
 
@@ -90,9 +103,9 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
         // The smaller the euclidean distance, the better.
         // 2) Sort in descending order if using cosine similarity.
         // The bigger the cosine similarity, the better.
-        for (int ii=0; ii<Ntrain; ii++) {
-            for (int jj=1; jj<Ntrain-ii; jj++) {
-                bool order;
+        for (ii=0; ii<Ntrain; ii++) {
+            for (jj=1; jj<Ntrain-ii; jj++) {
+                // order = false;
                 if (this->getMetric() == "euclidean_distances")
                     // sort in ascending order
                     order = distances[jj-1] > distances[jj];
@@ -100,11 +113,11 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
                     // sort in descending order
                     order = distances[jj-1] < distances[jj];
                 if (order) {
-                    float temp1 = distances[jj-1];
+                    temp1 = distances[jj-1];
                     distances[jj-1]  = distances[jj];
                     distances[jj] = temp1;
 
-                    bool temp2 = sorted_train_labels[jj-1];
+                    temp2 = sorted_train_labels[jj-1];
                     sorted_train_labels[jj-1]  = sorted_train_labels[jj];
                     sorted_train_labels[jj] = temp2;
                 }
@@ -112,9 +125,9 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
         }
 
         // Get the category of the top 
-        unsigned spam_votes = 0;
-        unsigned ham_votes = 0;
-        for (int j=0; j<this->getK(); j++) {
+        spam_votes = 0;
+        ham_votes = 0;
+        for (j=0; j<this->getK(); j++) {
             // cout << "distances[" << j << "]: " << distances[j] 
             //    << ", sorted_train_labels[" << j << "]: " << sorted_train_labels[j] << "\n";
             if (sorted_train_labels[j])
@@ -127,16 +140,18 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
             predicted_labels[i] = true;
         } else if (spam_votes < ham_votes) {
             predicted_labels[i] = false;
-        } else {
+        } 
+        // If the we have equal spam and ham closest neighbours, then classify with label of the closest neighbor.
+        else {
             predicted_labels[i] = sorted_train_labels[0];
         }
 
-        cout << "kNN, i: " << i << ", filename: " << testPool[i].getFileName() 
-            << ", predicted category: " << predicted_labels[i] << "\n";
+        // cout << "kNN, i: " << i << ", filename: " << testPool[i].getFileName() 
+        //     << ", predicted category: " << predicted_labels[i] << "\n";
 
     }
 
-    cout << "\n";
+    // cout << "\n";
 
     this->setNtest(Ntest);
     // this->setPredictedLabels(predicted_labels);
@@ -148,15 +163,20 @@ bool* KNNClassifier::classify(InstancePool trainingPool, InstancePool testPool) 
 // Finds the euclidean distance between the two tfidf vectors.
 // N is the total number of features.
 float KNNClassifier::get_euclidean_distance(Instance inst1, Instance inst2, unsigned N) {
+
     float euclidean_distance = 0;
     float sum = 0;
+    int i = 0;
     unsigned m = 0;
     unsigned r = 0;
+    unsigned id1 = 0;
+    unsigned id2 = 0;
+
     // cout << "N: " << N << "\n";
-    for (int i=0; i<N; i++) {
+    for (i=0; i<N; i++) {
         // cout << "i: " << i << ", m: " << m << ", r: " << r << "\n";
-        unsigned id1 = inst1.getFeatureID(m);
-        unsigned id2 = inst2.getFeatureID(r);
+        id1 = inst1.getFeatureID(m);
+        id2 = inst2.getFeatureID(r);
         // cout << "id1: " << id1 << ", id2: " << id2 << "\n";
         if (i == id1 && i == id2) {
             sum += pow(inst1.getScore(m) - inst2.getScore(r), 2);
@@ -198,17 +218,22 @@ float KNNClassifier::get_euclidean_distance(Instance inst1, Instance inst2, unsi
 // Finds the cosine similarity between the two tfidf vectors.
 // N is the total number of features.
 float KNNClassifier::get_cosine_similarity(Instance inst1, Instance inst2, unsigned N) {
+
     float cosine_similarity = 0;
     float sum = 0;
     float norm_inst1 = 0;
     float norm_inst2 = 0;
+    int i = 0;
     unsigned m = 0;
     unsigned r = 0;
+    unsigned id1 = 0;
+    unsigned id2 = 0;
+    
     // cout << "N: " << N << "\n";
-    for (int i=0; i<N; i++) {
+    for (i=0; i<N; i++) {
         // cout << "i: " << i << ", m: " << m << ", r: " << r << "\n";
-        unsigned id1 = inst1.getFeatureID(m);
-        unsigned id2 = inst2.getFeatureID(r);
+        id1 = inst1.getFeatureID(m);
+        id2 = inst2.getFeatureID(r);
         // cout << "id1: " << id1 << ", id2: " << id2 << "\n";
         if (i == id1 && i == id2) {
             sum += inst1.getScore(m) * inst2.getScore(r);

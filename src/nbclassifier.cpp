@@ -26,7 +26,7 @@ NaiveBayesClassifier::~NaiveBayesClassifier() {
 
 
 // This is an implementation for the Naive Bayes classifier with tf-idf features,
-// that is not scientifically proven to be correct. It is something that seemed to do the trick.
+// that is not scientifically proven to be correct. However,it seemed to do the trick.
 bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool testPool) {
     unsigned Ntest = testPool.getNumberOfInstances();
 
@@ -38,10 +38,11 @@ bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool tes
     // sum_of_all_train_scores_in_class: 
     // sum of (tf-idf weights of all the tokens belonging to that class, for the train documents)
 
-    float sum_of_all_train_scores_in_spam_class = 0;
-    float sum_of_all_train_scores_in_ham_class = 0;
+    float sum_of_all_train_scores_in_spam_class = 0.0;
+    float sum_of_all_train_scores_in_ham_class = 0.0;
     
-    for (int i=0; i<Ntrain; i++) {
+    int i, j = 0;
+    for (i=0; i<Ntrain; i++) {
         Instance inst = trainingPool[i];
         bool label = inst.getCategory();
         for (int j=0; j<inst.getNumberOfFeatures(); j++) {
@@ -54,21 +55,30 @@ bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool tes
         }
     }
 
+    int id, id2 = 0;
+    float score = 0.0;
+    int k = 0;
+    int l = 0;
+    float sum_of_all_test_vector_scores_in_spam_class = 0.0;
+    float sum_of_all_test_vector_scores_in_ham_class = 0.0;
+    float prob_feature_vector_given_spam_class = 0.0;
+    float prob_feature_vector_given_ham_class = 0.0;
+
     bool* predicted_labels = new bool[Ntest];
-    for (int i=0; i<Ntest; i++) {
+    for (i=0; i<Ntest; i++) {
         
-        float sum_of_all_test_vector_scores_in_spam_class = 0;
-        float sum_of_all_test_vector_scores_in_ham_class = 0;
-        int j = 0;
+        sum_of_all_test_vector_scores_in_spam_class = 0;
+        sum_of_all_test_vector_scores_in_ham_class = 0;
+        j = 0;
         while (j < testPool[i].getNumberOfFeatures()) {
-            int id = testPool[i].getFeatureID(j);
-            float score = testPool[i].getScore(j);
+            id = testPool[i].getFeatureID(j);
+            score = testPool[i].getScore(j);
             // cout << "j: " << j << ", id: " << id << "\n";
 
-            for (int k=0; k<Ntrain; k++) {
+            for (k=0; k<Ntrain; k++) {
                 // cout << "k: " << k << "\n";
-                int l = 0;
-                int id2 = -1;
+                l = 0;
+                id2 = -1;
                 while (l < trainingPool[k].getNumberOfFeatures() && id2 < id) {
                     id2 = trainingPool[k].getFeatureID(l);
                     // cout << "l: " << l << ", id2: " << id2 << "\n";
@@ -88,19 +98,20 @@ bool* NaiveBayesClassifier::classify(InstancePool trainingPool, InstancePool tes
             j++;
         }
 
-        float prob_feature_vector_given_spam_class = sum_of_all_test_vector_scores_in_spam_class / sum_of_all_train_scores_in_spam_class;
-        float prob_feature_vector_given_ham_class = sum_of_all_test_vector_scores_in_ham_class / sum_of_all_train_scores_in_ham_class;
+        prob_feature_vector_given_spam_class = sum_of_all_test_vector_scores_in_spam_class / sum_of_all_train_scores_in_spam_class;
+        prob_feature_vector_given_ham_class = sum_of_all_test_vector_scores_in_ham_class / sum_of_all_train_scores_in_ham_class;
 
         if (prob_feature_vector_given_spam_class >= prob_feature_vector_given_ham_class)
             predicted_labels[i] = true;
         else
             predicted_labels[i] = false;
 
-        cout << "Naive-Bayes, i: " << i << ", filename: " << testPool[i].getFileName() 
-            << ", predicted category: " << predicted_labels[i] << "\n";
+        // cout << "Naive-Bayes, i: " << i << ", filename: " << testPool[i].getFileName() 
+        //     << ", predicted category: " << predicted_labels[i] << "\n";
+        
     }
     
-    cout << "\n";
+    // cout << "\n";
 
     this->setNtest(Ntest);
     // this->setPredictedLabels(predicted_labels);
