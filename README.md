@@ -95,15 +95,15 @@ Run the script "compile.sh". Type:
 	</tr>
 	<tr>
 		<td>Naive Bayes Classifier</td>
-		<td>95.85 %</td>
-		<td>82.14 %</td>
-		<td>95.83 %</td>
+		<td>96.19 %</td>
+		<td>93.02 %</td>
+		<td>83.33 %</td>
 		<td>289</td>
-		<td>12</td>
-		<td>46</td>
-		<td>10</td>
-		<td>231</td>
-		<td>2</td>
+		<td>11</td>
+		<td>40</td>
+		<td>3</td>
+		<td>238</td>
+		<td>8</td>
 	</tr>
 	<tr>
 		<td>Baseline Classifier (Most Frequent label strategy)</td>
