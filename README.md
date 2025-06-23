@@ -41,8 +41,8 @@ Run the script "compile.sh". Type:
 		<th>test</th>
 		<th>wrong</th>
 		<th>TP</th>
-		<th>TN</th>
 		<th>FP</th>
+		<th>TN</th>
 		<th>FN</th>
 	</tr>
 	<tr>
